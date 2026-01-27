@@ -1,30 +1,49 @@
+import Pages.PracticeFormPage;
+import Settings.BaseTestForUI;
 import com.codeborne.selenide.Condition;
-import org.junit.Test;
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import static com.codeborne.selenide.Selectors.*;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Configuration.*;
 
 
-public class UITest {
+public class UITest extends BaseTestForUI {
 
-    @Test // Тест формы
-    public void positiveCase () {
-        open("https://demoqa.com/automation-practice-form");
-        $(byXpath("//*[@id=\"firstName\"]")).setValue("Анна-М'ариё"); // Имя, ввод
-        $(byId("lastName")).setValue("Иванова-П'ётрова"); // Фамилия, ввод
-        $(byId("userEmail")).setValue("name-1'@example.com"); // Эл. почта, ввод
-        $(byId("gender-radio-1")).click(); // Пол, радио
-        $(byId("userNumber")).setValue("9040830784"); // Номер телефона, ввести
-        $(byId("dateOfBirthInput")).click(); // Дата, выбрать
-            $$("react-datepicker__month-select").first().click();
-            $$("react-datepicker__year-select").first().click();
-            $("react-datepicker__day react-datepicker__day--013").click();
-        $(byId("subjectsContainer")).setValue("Maths").pressEnter(); // выбрать предмет из списка, выбрать
-        $(byId("hobbies-checkbox-1")).click(); // выбрать хобби, чекбокс
-        $(byId("input[type=file]")).sendKeys("C:\\Users\\e.kauter\\Documents\\Lightshot\\Screenshot_1.png"); //загрузить файл
-        $(byId("currentAddress")).setValue("Belgorod");
-        $(byClassName(" css-yk16xz-control")).setValue("NCR").pressEnter();
-        $(byClassName(" css-1uccc91-singleValue")).setValue("Delhi").pressEnter();
-        $(byId("submit")).click();
+    @Test // Тест заполнения формы
+    @Order(1)
+    void testForm() {
+        formPage.setFirstName("Евгений")
+                .setLastName("Каутер")
+                .setEmail("kauter@mail.ru")
+                .setGenderFemale()
+                .setPhoneNumber("9040830784")
+                .setDateOfBirthInCalendar() // выбор даты кликом
+                //.setDateOfBirthByInput("03 Jul 2010") // ввод даты с клавиатуры. Не удаётся стереть старую дату.
+                                                        // Способы закомментированы в методе inputDate
+                .setSubject("Maths")
+                .setHobbieSport()
+                .setHobbieReading()
+                .setHobbieMusic()
+                .setDownloadFile()
+                .setInputAddress("Belgorod, Sadovaya str.")
+                .setState()
+                .setCity()
+                .setSubmit();
+
+        popUpPage.checkStudentName("Евгений Каутер")
+                .checkStudentEmail("kauter@mail.ru")
+                .checkGender("Female")
+                .checkMobile("9040830784")
+                .checkDateOfBirth("13 January,2026")
+                .checkSubject("Maths")
+                .checkHobbies("Music")
+                .checkPicture("test.txt")
+                .checkAddress("Belgorod, Sadovaya str.")
+                .checkStateAndCity("NCR Delhi");
+
     }
 
 }
