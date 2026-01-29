@@ -3,6 +3,7 @@ import Settings.BaseTestForUI;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
+import jdk.jfr.Description;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import static com.codeborne.selenide.Selectors.*;
@@ -12,8 +13,8 @@ import static com.codeborne.selenide.Configuration.*;
 
 public class UITest extends BaseTestForUI {
 
-    @Test // Тест заполнения формы
-    @Order(1)
+    @Test
+    @Description("Проверка заполнения полей формы и popup")
     void testForm() {
         formPage.setFirstName("Евгений")
                 .setLastName("Каутер")
@@ -46,4 +47,34 @@ public class UITest extends BaseTestForUI {
 
     }
 
+    @Test
+    @Description("Валидация корректного домена электронного адреса")
+    void testValidationEmailDomen() {
+
+        formPage.setValidationDomen("kauter@mai.r");
+    }
+
+    @Test
+    @Description("Валидация наличия символа @ в электронном адресе")
+    void testValidationEmailSobaka() {
+
+        formPage.setValidationSobaka("kautermail.com");
+    }
+
+    @Test
+    @Description("Валидация количества цифр в номере телефона")
+    void testValidationNumbersCount() {
+
+        formPage.setValidationNumbersCount("123456789");
+    }
+
+    @Test
+    @Description("Валидация наличия букв в номере телефона")
+    void testValidationNumberForLetters() {
+
+        formPage.setValidationNumberForLetters("a123456789");
+    }
+
+    //mvn clean -Dtest=UITest test
+    //mvn allure:serve
 }

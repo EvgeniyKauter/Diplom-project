@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PracticeFormPage {
 
@@ -42,6 +44,7 @@ public class PracticeFormPage {
     private final DropdownList city = new DropdownList($(byClassName("css-2b097c-container")), $(byId("react-select-4-input")),
             "Delhi", "Выбор города");
     private final Button submit = new Button($(byId("submit")), "Нажать Подтвердить");
+
 
     @Step("Вводим имя")
     public PracticeFormPage setFirstName(String word) {
@@ -152,4 +155,30 @@ public class PracticeFormPage {
         return this;
     }
 
+    @Step("Проверка валидации email на домен")
+    public  PracticeFormPage setValidationDomen(String emailName) {
+        assertTrue(emailName.contains(".ru") || emailName.contains(".com"),
+                "Некорректный домен в email " + emailName + " Допускается .ru или .com");
+        return this;
+    }
+
+    @Step("Проверка валидации email на наличие @")
+    public PracticeFormPage setValidationSobaka(String emailName) {
+        assertTrue(emailName.contains("@"),
+                "Некорректный email " + emailName + " Отсутсвует символ @");
+        return this;
+    }
+
+    @Step("Проверка валидации мобильного номера на наличие букв")
+    public PracticeFormPage setValidationNumberForLetters(String mobileNumber) {
+        boolean isDigitsOnly = mobileNumber.chars().allMatch(Character::isDigit);
+        assertTrue(isDigitsOnly, "Мобильный номер не должен содержать буквы");
+        return this;
+    }
+
+    @Step("Проверка валидации мобильного номера на количество цифр")
+    public PracticeFormPage setValidationNumbersCount(String mobileNumber) {
+        assertEquals(10, mobileNumber.length(), "Мобильный номер должен содержать 10 цифр");
+        return this;
+    }
 }
